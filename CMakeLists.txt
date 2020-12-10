@@ -1,11 +1,19 @@
 cmake_minimum_required (VERSION 3.15)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(sm CXX)
 
-find_package(cxxopts)
-find_package(fmt)
+find_package(cxxopts CONFIG REQUIRED)
+find_package(spdlog CONFIG REQUIRED)
+find_package(GTest CONFIG REQUIRED)
 
 add_subdirectory(src)
+add_subdirectory(tests)
+
+enable_testing()
+
+add_test(NAME NoArgs COMMAND $<TARGET_FILE:sm>)
+add_test(NAME Help COMMAND $<TARGET_FILE:sm> --help)
+add_test(NAME GTestUnittests COMMAND $<TARGET_FILE:testStackMachine>)

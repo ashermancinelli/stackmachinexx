@@ -1,48 +1,5 @@
-# Use the Google style in this project.
-BasedOnStyle: Chromium
-DerivePointerAlignment: false
-PointerAlignment: Left
+---
+BasedOnStyle: LLVM
 BreakBeforeBraces: Allman
-
-# Some folks prefer to write "int& foo" while others prefer "int &foo".  The
-# Google Style Guide only asks for consistency within a project, we chose
-# "int& foo" for this project:
-#---
-#Language: Cpp
-#AlignAfterOpenBracket: DontAlign
-#AlignConsecutiveAssignments: true
-#AlignConsecutiveDeclarations: true
-#AlignConsecutiveMacros: true
-#AlignEscapedNewlines: Right
-#AllowAllArgumentsOnNextLine: true
-#AllowAllParametersOfDeclarationOnNextLine: false
-#AllowShortBlocksOnASingleLine: false
-#AllowShortFunctionsOnASingleLine: false
-#AllowShortIfStatementsOnASingleLine: false
-#AllowShortLambdasOnASingleLine: None
-#BreakBeforeBraces: Allman
-#BreakBeforeTernaryOperators: true
-#BreakConstructorInitializers: BeforeComma
-#BreakInheritanceList: BeforeComma
-#BreakStringLiterals: true
-#ColumnLimit: 100
-#CompactNamespaces: true
-#ContinuationIndentWidth: 2
-#FixNamespaceComments: true
-#IndentPPDirectives: None
-#IndentWidth: 2
-#MaxEmptyLinesToKeep: 1
-#NamespaceIndentation: None
-#PointerAlignment: Left
-#SortIncludes: false
-#SpaceAfterTemplateKeyword: false
-#SpaceBeforeCtorInitializerColon: true
-#SpaceBeforeInheritanceColon: true
-#SpaceBeforeParens: Never
-#SpaceBeforeRangeBasedForLoopColon: true
-#SpaceInEmptyParentheses: false
-#SpacesBeforeTrailingComments: 3
-#SpacesInAngles: false
-#SpacesInParentheses: false
-#SpacesInSquareBrackets: false
-#---
+SpaceAfterTemplateKeyword: 'true'
+TabWidth: '2'
