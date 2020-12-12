@@ -1,6 +1,10 @@
 add_executable(testStackMachine testStackMachine.cpp)
-target_link_libraries(testStackMachine
+add_executable(testStackHandle testStackHandle.cpp)
+
+foreach(test testStackMachine testStackHandle)
+target_link_libraries(${test
   PRIVATE
   StackMachine
   GTest::gtest
   )
+endforeach()

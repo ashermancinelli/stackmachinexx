@@ -16,4 +16,5 @@ enable_testing()
 
 add_test(NAME NoArgs COMMAND $<TARGET_FILE:sm>)
 add_test(NAME Help COMMAND $<TARGET_FILE:sm> --help)
-add_test(NAME GTestUnittests COMMAND $<TARGET_FILE:testStackMachine>)
+add_test(NAME StackMachine_Unit COMMAND $<TARGET_FILE:testStackMachine>)
+add_test(NAME StackHandle_Unit COMMAND $<TARGET_FILE:testStackHandle>)

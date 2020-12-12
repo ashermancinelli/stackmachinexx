@@ -5,61 +5,35 @@
 
 using ::testing::InitGoogleTest;
 using namespace stackmachine;
-using types::Opcode;
 
-TEST(StackMachine, StaticInitialization)
-{
-  constexpr std::size_t sz = 1024;
-  using sm_t = StackMachine<sz>;
-  typename sm_t::Stack stack;
-  EXPECT_TRUE(stack.size() == sz);
-}
-
-TEST(StackMachine, Allocation)
-{
-  constexpr std::size_t ss = 2048;
-  constexpr std::size_t hs = 2048;
-  StackMachine sm;
-  auto mem = sm.allocate(2048);
-  EXPECT_TRUE(mem == std::nullopt);
-
-  mem = sm.allocate(1024);
-  EXPECT_FALSE(mem == std::nullopt) << "Unable to allocate memory on heap!";
-}
-
-TEST(StackMachine, ExecuteOp)
+TEST(StackMachine, ExecuteNoop)
 {
   StackMachine sm;
   sm.execute({
-      {Opcode::Noop, {}, {}},
+      {::stackmachine::detail::Opcode::Noop, {}, {}},
   });
 }
 
-TEST(StackMachine, HostFunctions)
+TEST(StackMachine, ExecutePush)
 {
-  using MyStackMachine = StackMachine<32>;
-  MyStackMachine sm;
-  sm.registerFunction("printPop",
-      [] (types::Memory<MyStackMachine::StackSize>& stack)
-      {
-        std::cout << stack[0] << "\n";
-        return 0;
-      });
+  StackMachine sm;
+  sm.execute({
+      {::stackmachine::detail::Opcode::Noop, {}, {}},
+  });
 }
 
-TEST(StackMachine, ManualStore)
+TEST(StackMachine, RegisterFunc)
 {
-  StackMachine<16> sm;
-  constexpr char original = 'a';
-  constexpr char expected = 'b';
-  auto _mem = sm.allocate(8);
-  EXPECT_TRUE(_mem) << "Could not allocate heap memory!";
-
-  auto mem = _mem.value();
-  for (int i = 0; i < 8; mem++, i++)
-  {
-    *mem = expected;
-  }
+  constexpr std::size_t Sz = 16;
+  StackMachine<Sz> sm;
+  sm.registerFunction("PushTest",
+      [] (StackMachine<Sz>::StackHandle h)
+      {
+        constexpr StackMachine<Sz>::MemorySegment expect = 10;
+        h.push(expect);
+        auto a = h.pop();
+        EXPECT_TRUE(a == expect);
+      });
 }
 
 int main(int argc, char **argv)
