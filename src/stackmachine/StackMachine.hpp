@@ -21,10 +21,7 @@ template <std::size_t StackSize = 2048> class StackMachine
   friend class ::stackmachine::detail::StackImpl;
 
 public:
-  using StackHandle = typename ::stackmachine::detail::StackHandle<StackSize>;
-  using HostFunction = typename ::stackmachine::detail::HostFunction<StackSize>;
-  using Memory = typename ::stackmachine::detail::Memory<StackSize>;
-  using Code = ::stackmachine::detail::Code;
+  using Memory = typename ::stackmachine::Memory<StackSize>;
 
   constexpr StackMachine() noexcept : _stack_it{0}, pid{0} {}
 
@@ -33,10 +30,10 @@ public:
     _ftable.insert({name, f});
   }
 
-  void callFunction(std::size_t idx)
+  void callFunction(string const& name)
   {
-    spdlog::debug("INVOKE: {}", _ftable[idx]);
-    _ftable[idx](stackHandle());
+    spdlog::debug("INVOKE: {}", _ftable[name]);
+    _ftable[name](stackHandle());
   }
 
   /** Executes a vector of instructions on the stack machine.  */
@@ -65,9 +62,9 @@ private:
   std::size_t _stack_it;
 
   /** Shorthand for creating a handle to the stack */
-  constexpr auto stackHandle()
+  constexpr StackHandle stackHandle()
   {
-    return detail::StackHandle{_stack, _stack_it};
+    return detail::StackHandleImpl(_stack, _stack_it);
   }
 };
 

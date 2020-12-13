@@ -1,6 +1,6 @@
 #pragma once
 #include <array>
-#include <stackmachine/types.hpp>
+#include <stackmachine/Types.hpp>
 #include <string>
 #include <vector>
 

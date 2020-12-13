@@ -27,9 +27,9 @@ TEST(StackMachine, RegisterFunc)
   constexpr std::size_t Sz = 16;
   StackMachine<Sz> sm;
   sm.registerFunction("PushTest",
-      [] (StackMachine<Sz>::StackHandle h)
+      [] (stackmachine::StackHandle h)
       {
-        constexpr StackMachine<Sz>::MemorySegment expect = 10;
+        constexpr stackmachine::detail::MemorySegment expect = 'a';
         h.push(expect);
         auto a = h.pop();
         EXPECT_TRUE(a == expect);
