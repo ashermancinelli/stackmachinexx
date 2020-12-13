@@ -3,8 +3,8 @@
 #include <map>
 #include <optional>
 #include <spdlog/spdlog.h>
+#include <stackmachine/Types.hpp>
 #include <stackmachine/detail/StackImpl.hpp>
-#include <stackmachine/detail/Types.hpp>
 #include <string>
 #include <vector>
 
@@ -16,28 +16,25 @@ using std::vector;
 namespace stackmachine
 {
 
-template <std::size_t StackSize = 2048> class StackMachine
+template <std::size_t StackSize = 2048> struct StackMachine
 {
-  friend class ::stackmachine::detail::StackImpl;
-
-public:
   using Memory = typename ::stackmachine::Memory<StackSize>;
 
-  constexpr StackMachine() noexcept : _stack_it{0}, pid{0} {}
+  constexpr StackMachine() noexcept = default;
 
-  constexpr void registerFunction(string const &name, HostFunction f) noexcept
+  void registerFunction(string const &name, HostFunction f) noexcept
   {
     _ftable.insert({name, f});
   }
 
-  void callFunction(string const& name)
+  void callFunction(string const &name)
   {
     spdlog::debug("INVOKE: {}", _ftable[name]);
-    _ftable[name](stackHandle());
+    _ftable[name](_stack);
   }
 
   /** Executes a vector of instructions on the stack machine.  */
-  void execute(const vector<detail::Code> &code)
+  void execute(const vector<Code> &code)
   {
     for (auto const &inst : code)
     {
@@ -46,26 +43,22 @@ public:
   }
 
   /** Execute a single instruction */
-  void execute(detail::Code) {}
+  void execute(Code) {}
+
+  bool hasError() const
+  {
+    return false;
+  }
 
 private:
   /** Process id */
-  std::size_t pid;
+  std::size_t _pid = 0;
 
   /** Dynamic function lookup table for host functions */
   std::unordered_map<string, HostFunction> _ftable;
 
-  /** Raw memory array */
-  Memory _stack;
-
-  /** Pointer to next byte to be allocated on stack */
-  std::size_t _stack_it;
-
-  /** Shorthand for creating a handle to the stack */
-  constexpr StackHandle stackHandle()
-  {
-    return detail::StackHandleImpl(_stack, _stack_it);
-  }
+  /** Internal stack handle */
+  ::stackmachine::detail::StackHandleImpl<StackSize> _stack;
 };
 
 } // namespace stackmachine

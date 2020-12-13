@@ -1,22 +1,39 @@
 #pragma once
-#include <stackmachine/detail/Types.hpp>
+#include <exception>
+#include <stackmachine/Types.hpp>
 
 namespace stackmachine::detail
 {
 
+constexpr std::unordered_map<char, string> typemap{
+    {0x7f, "i32"},     {0x7e, "i64"},  {0x7d, "f32"}, {0x7c, "f64"},
+    {0x70, "anyfunc"}, {0x60, "func"}, {0x40, ""},
+};
+
 /** Handle given to host functions and intrinsics */
 template <std::size_t Sz> struct StackHandleImpl : StackHandle
 {
-  virtual StackHandle(Memory<Sz> &s, std::size_t &it) : _stack{s}, _stack_it{it}
+  StackHandleImpl() = default;
+
+  virtual MemorySegment pop() override
   {
+    if (_stack_it == 0)
+      throw std::runtime_error("Popped an empty stack");
+    return _stack[_stack_it--];
   }
-  virtual MemorySegment pop() override { return _stack[_stack_it--]; }
+
   virtual MemorySegment peek() const override { return _stack[_stack_it]; }
-  virtual void push(MemorySegment v) override { _stack[_stack_it++] = v; }
+
+  virtual void push(MemorySegment v) override
+  {
+    if (_stack_it == _stack.size() - 1)
+      throw std::runtime_error("Pushed a full stack");
+    _stack[++_stack_it] = v;
+  }
 
 private:
-  Memory<Sz> &_stack;
-  std::size_t &_stack_it;
+  Memory<Sz> _stack;
+  std::size_t _stack_it = 0;
 };
 
 [[nodiscard]] static std::string Stringify(Opcode op)

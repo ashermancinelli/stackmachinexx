@@ -2,7 +2,7 @@
 #include <cxxopts.hpp>
 #include <string>
 #include <vector>
-#include <StackMachine.hpp>
+#include <stackmachine/StackMachine.hpp>
 
 using std::string;
 using std::vector;

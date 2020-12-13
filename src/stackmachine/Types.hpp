@@ -13,7 +13,7 @@ using std::tuple;
 /** Possible assembly operations in the spec */
 enum class Opcode
 {
-  Noop = 0,
+  unreachable = 0,
   Push,
   Pop,
   Store,
@@ -29,7 +29,9 @@ template <std::size_t Sz> using Memory = array<MemorySegment, Sz>;
 using Code =
     std::tuple<Opcode, optional<MemorySegment>, optional<MemorySegment>>;
 
-/** Interface for host functions to access stack memory */
+/** 
+ * @brief Interface for host functions to access stack memory
+ */
 struct StackHandle
 {
   virtual MemorySegment pop() = 0;
@@ -37,6 +39,6 @@ struct StackHandle
   virtual void push(MemorySegment) = 0;
 };
 
-using HostFunction = std::function<void(StackHandle)>;
+using HostFunction = std::function<void(StackHandle&)>;
 
-} // namespace stackmachine::detail
+} // namespace stackmachine

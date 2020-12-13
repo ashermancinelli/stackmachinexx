@@ -8,32 +8,13 @@ using namespace stackmachine;
 
 TEST(StackMachine, ExecuteNoop)
 {
-  StackMachine sm;
-  sm.execute({
-      {::stackmachine::detail::Opcode::Noop, {}, {}},
-  });
-}
-
-TEST(StackMachine, ExecutePush)
-{
-  StackMachine sm;
-  sm.execute({
-      {::stackmachine::detail::Opcode::Noop, {}, {}},
-  });
-}
-
-TEST(StackMachine, RegisterFunc)
-{
+  using ::stackmachine::Opcode;
   constexpr std::size_t Sz = 16;
   StackMachine<Sz> sm;
-  sm.registerFunction("PushTest",
-      [] (stackmachine::StackHandle h)
-      {
-        constexpr stackmachine::detail::MemorySegment expect = 'a';
-        h.push(expect);
-        auto a = h.pop();
-        EXPECT_TRUE(a == expect);
-      });
+  sm.execute({
+      {Opcode::Noop, {}, {}},
+  });
+  EXPECT_FALSE(sm.hasError());
 }
 
 int main(int argc, char **argv)
